@@ -17,12 +17,13 @@ class ProfileCompletionMiddleware:
     def __call__(self, request):
         """Code to be executed for each request before the view is called"""
         if not request.user.is_anonymous:
-            # Podemos hacer eso porque antes le dijimos que es una relación oneToOne entre profile y user
-            profile = request.user.profile
-            if not profile.picture or not profile.biography:
-                # Condiciono en que pagina va a redireccionar.
-                if request.path not in [reverse('update_profile'), reverse('logout')]:
-                    return redirect('update_profile')
+            if not request.user.is_staff:
+                # Podemos hacer eso porque antes le dijimos que es una relación oneToOne entre profile y user
+                profile = request.user.profile
+                if not profile.picture or not profile.biography:
+                    # Condiciono en que pagina va a redireccionar.
+                    if request.path not in [reverse('update_profile'), reverse('logout')]:
+                        return redirect('update_profile')
 
         response = self.get_response(request)
         return response
