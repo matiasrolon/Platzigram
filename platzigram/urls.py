@@ -17,13 +17,14 @@ from users import views as users_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     # agrego la URL junto con el método (vista) que responderá por la misma.
-    path('hello-world/',local_views.hello_world, name='hello_world'),
-    path('print-numbers/',local_views.non_sorted_numbers, name='print-numbers'),
-    path('sorted-numbers/',local_views.sorted_numbers, name='sorted-numbers'),
+    path('hello-world/', local_views.hello_world, name='hello_world'),
+    path('print-numbers/', local_views.non_sorted_numbers, name='print-numbers'),
+    path('sorted-numbers/', local_views.sorted_numbers, name='sorted-numbers'),
     path('hi/<str:name>/<int:age>', local_views.say_hi, name='hi-name'),
-
-    path('posts-direct/',posts_views.list_posts_direct,name='posts-direct'),
-    path('posts/',posts_views.list_posts_html, name='feed'),
+    # posts
+    path('posts-direct/', posts_views.list_posts_direct,name='posts-direct'),
+    path('', posts_views.list_posts_html, name='feed'),
+    path('posts/new/', posts_views.create_post, name='create_post'),
 
     path('users/login/',users_views.login_view, name='login'),
     path('users/logout/', users_views.logout_view, name='logout'),
