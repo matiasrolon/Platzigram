@@ -9,26 +9,22 @@ The import order in a Django project is:
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path
-from platzigram import views as local_views
-from posts import views as posts_views
-from users import views as users_views
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # agrego la URL junto con el método (vista) que responderá por la misma.
-    path('hello-world/', local_views.hello_world, name='hello_world'),
-    path('print-numbers/', local_views.non_sorted_numbers, name='print-numbers'),
-    path('sorted-numbers/', local_views.sorted_numbers, name='sorted-numbers'),
-    path('hi/<str:name>/<int:age>', local_views.say_hi, name='hi-name'),
-    # posts
-    path('posts-direct/', posts_views.list_posts_direct,name='posts-direct'),
-    path('', posts_views.list_posts_html, name='feed'),
-    path('posts/new/', posts_views.create_post, name='create_post'),
 
-    path('users/login/',users_views.login_view, name='login'),
-    path('users/logout/', users_views.logout_view, name='logout'),
-    path('users/signup/', users_views.signup, name='signup'),
-    path('users/me/profile', users_views.update_profile, name='update_profile')
+    # URLs de la fase de prueba
+    # agrego la URL junto con el método (vista) que responderá por la misma.
+    # path('hello-world/', local_views.hello_world, name='hello_world'),
+    # path('print-numbers/', local_views.non_sorted_numbers, name='print-numbers'),
+    # path('sorted-numbers/', local_views.sorted_numbers, name='sorted-numbers'),
+    # path('hi/<str:name>/<int:age>', local_views.say_hi, name='hi-name'),
+
+    # posts
+    path('', include(('posts.urls', 'posts'), namespace='posts')),
+    # users
+    path('users/', include(('users.urls', 'users'), namespace='users'))
+
   # Para que busque las imagenes localmente y no las detecte como una url normal del sitio.
 ] + static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
