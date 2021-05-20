@@ -2,42 +2,20 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Forms
 from posts.forms import PostForm
 # Models
 from posts.models import Post
 
-"""
-posts = [
-    {
-        'title': 'Mont Blanc',
-        'user': {
-            'name': 'Yésica Cortés',
-            'picture': 'https://picsum.photos/60/60/?image=1027'
-        },
-        'timestamp': datetime.now().strftime('%b %dth, %Y - %H:%M hrs'),
-        'photo': 'https://picsum.photos/800/600?image=1036',
-    },
-    {
-        'title': 'Via Láctea',
-        'user': {
-            'name': 'Christian Van der Henst',
-            'picture': 'https://picsum.photos/60/60/?image=1005'
-        },
-        'timestamp': datetime.now().strftime('%b %dth, %Y - %H:%M hrs'),
-        'photo': 'https://picsum.photos/800/800/?image=903',
-    },
-    {
-        'title': 'Nuevo auditorio',
-        'user': {
-            'name': 'Uriel (thespianartist)',
-            'picture': 'https://picsum.photos/60/60/?image=883'
-        },
-        'timestamp': datetime.now().strftime('%b %dth, %Y - %H:%M hrs'),
-        'photo': 'https://picsum.photos/500/700/?image=1076',
-    }
-]"""
-
+class PostsFeedView(LoginRequiredMixin,ListView):
+    """Return all published posts."""
+    template_name = 'posts/feed.html'
+    model= Post
+    ordering = ('-created')
+    paginate_by = 2
+    context_object_name = 'posts'
 
 def list_posts_direct(request):
     """ List existing posts."""
@@ -66,7 +44,7 @@ def create_post(request):
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             form.save() # esto automaticamente nos guarda el Post.
-            return redirect('feed')
+            return redirect('posts:feed')
     else:
         form = PostForm()
 

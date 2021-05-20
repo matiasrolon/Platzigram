@@ -12,7 +12,7 @@ urlpatterns = [
     ),
     path(
         route='',
-        view=views.list_posts_html,
+        view=views.PostsFeedView.as_view(),
         name='feed'),
     path(
         route='posts/new/',

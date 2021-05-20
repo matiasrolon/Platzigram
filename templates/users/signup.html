@@ -5,7 +5,7 @@
 
 {% block container %}
     <p> Sign up!</p>
-    <form action="{% url 'signup' %}" method="POST">
+    <form action="{% url 'users:signup' %}" method="POST">
     {% if error %}
         <p class="alert alert-danger">{{ error }}</p>
     {% endif %}
