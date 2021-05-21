@@ -4,12 +4,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import  login_required
 from django.contrib.auth import authenticate, login, logout
-from django.views.generic import DetailView
-from django.urls import reverse
+from django.views.generic import DetailView, FormView, UpdateView
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Models
 from django.contrib.auth.models import User
 from posts.models import Post
+from users.models import Profile
 # Forms
 from users.forms import ProfileForm, SignupForm
 #Exception
@@ -31,6 +32,31 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         context['posts'] = Post.objects.filter(user=user).order_by('-created')
         return context
 
+
+class SignupView(FormView):
+    template_name = 'users/signup.html'
+    form_class = SignupForm
+    success_url = reverse_lazy('users:login')
+
+    def form_valid(self, form):
+        """Save from data"""
+        form.save()
+        return super().form_valid(form)
+
+
+class UpdateProfileView(UpdateView):
+    template_name = 'users/update_profile.html'
+    model = Profile
+    fields = ['website', 'biography', 'phone', 'picture']
+
+    def get_object(self):
+        """Return user's profile"""
+        return self.request.user.profile
+
+    def get_success_url(self):
+        """"Return to user's profile."""
+        username = self.object.user.username # self.object es el profile que ya se trajo en get_object
+        return reverse('users:detail', kwargs={'username': username})
 
 def update_profile(request):
     """Update a user's profile views"""
