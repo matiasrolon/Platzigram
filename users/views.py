@@ -48,7 +48,7 @@ class SignupView(FormView):
 class UpdateProfileView(UpdateView):
     template_name = 'users/update_profile.html'
     model = Profile
-    fields = ['website', 'biography', 'phone', 'picture']
+    fields = ['website', 'biography', 'phone_number', 'picture']
 
     def get_object(self):
         """Return user's profile"""
